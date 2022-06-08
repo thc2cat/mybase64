@@ -3,24 +3,36 @@ package main
 import (
 	"bufio"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"os"
 )
 
+var (
+	equal                = []byte{'='}
+	ErrCorruptInputError = base64.CorruptInputError(63)
+)
+
 func main() {
-
-	var rawDecodedText []byte
-	var err error
-
-	input := stdinToChanByteArray(100)
+	input := stdinToChanByteArray(1)
 	for i := range input {
+		try(string(i))
+	}
+}
 
-		// fmt.Printf("Starting  decoding %v\n", string(i))
-		rawDecodedText, err = base64.StdEncoding.DecodeString(string(i))
-		if err != nil {
-			fmt.Printf("Error decoding %s\n", string(i))
+func try(i string) {
+	rawDecodedText, err := base64.StdEncoding.DecodeString(i)
+	if err != nil {
+		switch {
+		case errors.Is(err, ErrCorruptInputError):
+			// fmt.Printf("Appending %s to '%s'\n", equal, i)
+			tmp := append([]byte(i), equal...)
+			try(string(tmp))
+		default:
+			fmt.Printf("Error decoding %v with '%s'\n", err, i)
 		}
-		fmt.Printf("%s\n", rawDecodedText)
+	} else {
+		fmt.Printf("%s converted to %s\n", i, rawDecodedText)
 	}
 }
 
