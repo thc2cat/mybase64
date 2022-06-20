@@ -2,7 +2,7 @@ package main
 
 // mybase64 read stdin and output decoded base64 if ascii text
 //
-// Version :
+// Versions :
 //
 // v0.3 : use isASCII
 // v0.2 : add '=' to corrupted entries
