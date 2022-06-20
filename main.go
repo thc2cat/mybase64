@@ -1,6 +1,12 @@
 package main
 
-// mybase64 read stdin and output decoded base64
+// mybase64 read stdin and output decoded base64 if ascii text
+//
+// Version :
+//
+// v0.3 : use isASCII
+// v0.2 : add '=' to corrupted entries
+// v0.1 : first running
 
 import (
 	"bufio"
@@ -8,6 +14,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"unicode"
 )
 
 var (
@@ -36,7 +43,9 @@ func try(i string) {
 			fmt.Printf("Error decoding %v with '%s'\n", err, i)
 		}
 	} else {
-		fmt.Printf("%s converted to %s\n", i, rawDecodedText)
+		if isASCII(rawDecodedText) {
+			fmt.Printf("%s converted to %s\n", i, rawDecodedText)
+		}
 	}
 }
 
@@ -56,4 +65,14 @@ func stdinToChanByteArray(length int) chan []byte {
 		close(c) // close all workers
 	}(myoutput)
 	return myoutput
+}
+
+// testing non ASCII []byte array like 🧡💛💚💙💜
+func isASCII(s []byte) bool {
+	for i := 0; i < len(s); i++ {
+		if s[i] > (byte)(unicode.MaxASCII) {
+			return false
+		}
+	}
+	return true
 }
