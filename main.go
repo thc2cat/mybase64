@@ -1,5 +1,7 @@
 package main
 
+// mybase64 read stdin and output decoded base64
+
 import (
 	"bufio"
 	"encoding/base64"
@@ -20,6 +22,8 @@ func main() {
 	}
 }
 
+// try to decode based64 encodings.
+// if error is a Corrupted input at 63, try to add "="
 func try(i string) {
 	rawDecodedText, err := base64.StdEncoding.DecodeString(i)
 	if err != nil {
@@ -36,6 +40,7 @@ func try(i string) {
 	}
 }
 
+// Standard stdin to chan ( should be in a utils lib )
 func stdinToChanByteArray(length int) chan []byte {
 	myoutput := make(chan []byte, length)
 	tmp := make([]byte, 128)
