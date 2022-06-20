@@ -14,12 +14,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"unicode"
 )
 
 var (
 	equal                = []byte{'='}
 	ErrCorruptInputError = base64.CorruptInputError(63)
+	// MaxASCII             = (byte)(unicode.MaxASCII)
+	MaxASCII = (byte)(127)
 )
 
 func main() {
@@ -45,6 +46,8 @@ func try(i string) {
 	} else {
 		if isASCII(rawDecodedText) {
 			fmt.Printf("%s converted to %s\n", i, rawDecodedText)
+		} else {
+			fmt.Printf("%s converted to non ASCII output", i)
 		}
 	}
 }
@@ -70,7 +73,7 @@ func stdinToChanByteArray(length int) chan []byte {
 // testing non ASCII []byte array like 🧡💛💚💙💜
 func isASCII(s []byte) bool {
 	for i := 0; i < len(s); i++ {
-		if s[i] > (byte)(unicode.MaxASCII) {
+		if s[i] > MaxASCII {
 			return false
 		}
 	}
