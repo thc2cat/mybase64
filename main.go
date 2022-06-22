@@ -2,6 +2,8 @@ package main
 
 // mybase64 read stdin and output decoded base64 if ascii text
 //
+// WARNING : output is different from linux base64 command
+//
 // Versions :
 //
 // v0.3 : use isASCII
