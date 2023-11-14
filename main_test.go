@@ -34,11 +34,11 @@ func Test_isASCII(t *testing.T) {
 		// TODO: Add test cases.
 		{"Ascii", args{"e1NTSEF9QWkrK1JNMHN1UUxLMDYwaTRMZVlvL0lua3V5NWpuVzQ="}, true},
 		{"Non ASCII", args{"🧡💛💚💙💜"}, false},
-		// {"Corrupted 2", args{"e1NTSEF9NEE4UeHc9PQ="}},
+		{"Corrupted 2", args{"e1NTSEF9NEE4UeHc9PQ="}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isASCII(([](byte)(tt.args.s))); got != tt.want {
+			if got := isASCII([]byte(tt.args.s)); got != tt.want {
 				t.Errorf("isASCII() = %v, want %v", got, tt.want)
 			}
 		})

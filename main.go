@@ -34,22 +34,22 @@ func main() {
 
 // try to decode based64 encodings.
 // if error is a Corrupted input at 63, try to add "="
-func try(i string) {
-	rawDecodedText, err := base64.StdEncoding.DecodeString(i)
+func try(input string) {
+	rawDecodedText, err := base64.StdEncoding.DecodeString(input)
 	if err != nil {
 		switch {
 		case errors.Is(err, ErrCorruptInputError):
 			// fmt.Printf("Appending %s to '%s'\n", equal, i)
-			tmp := append([]byte(i), equal...)
+			tmp := append([]byte(input), equal...)
 			try(string(tmp))
 		default:
-			fmt.Printf("Error decoding %v with '%s'\n", err, i)
+			fmt.Printf("Error decoding %v with '%s'\n", err, input)
 		}
 	} else {
 		if isASCII(rawDecodedText) {
-			fmt.Printf("%s converted to %s\n", i, rawDecodedText)
+			fmt.Printf("%v converted to %s\n", input, rawDecodedText)
 		} else {
-			fmt.Printf("%s converted to non ASCII output", i)
+			fmt.Printf("%s converted to non ASCII output", input)
 		}
 	}
 }
@@ -57,7 +57,7 @@ func try(i string) {
 // Standard stdin to chan ( should be in a utils lib )
 func stdinToChanByteArray(length int) chan []byte {
 	myoutput := make(chan []byte, length)
-	tmp := make([]byte, 128)
+	tmp := make([]byte, length)
 
 	go func(c chan []byte) {
 		scanner := bufio.NewScanner(os.Stdin)
